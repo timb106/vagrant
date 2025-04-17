@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_timb106_vagrant_1744895524921-pr-trigger-input-set
+  identifier: Build_timb106_vagrant_1744895524921prtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Build_timb106_vagrant_1744895524921
+    properties:
+      ci:
+        codebase:
+          build:
+            type: PR
+            spec:
+              number: <+trigger.prNumber>
