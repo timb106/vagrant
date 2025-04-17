@@ -18,19 +18,58 @@ on:
       - 'Rakefile'
 
 jobs:
+name: Vagrant Ruby Tests
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'bin/**'
+      - 'lib/**'
+      - 'plugins/**'
+      - 'test/**'
+      - 'Gemfile'
+      - 'templates/**'
+      - 'vagrant.gemspec'
+      - 'Rakefile'
+
+jobs:
   unit-tests-ruby:
-    runs-on: ubuntu-latest
-    continue-on-error: true
+    runs-on: ubuntu-24.04
     name: Vagrant unit tests on Ruby 3.2
     steps:
       - name: Code Checkout
-        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@250fcd6a742febb1123a77a841497ccaa8b9e939 # v1.152.0
-        with:
-          ruby-version: 3.2
-          bundler-cache: true
-      - name: install dependencies
+        uses: actions/checkout@v3.5.3
+      - name: Install dependencies for Ruby setup
+        run: |
+          sudo apt update
+          sudo apt install -y git curl autoconf bison build-essential libssl-dev libyaml-dev libreadline-dev zlib1g-dev
+      - name: Install rbenv and Ruby
+        run: |
+          git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+          echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+          echo 'eval "$(rbenv init - bash)"' >> ~/.bashrc
+          source ~/.bashrc
+          git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+          ~/.rbenv/bin/rbenv install 3.2.0
+          ~/.rbenv/bin/rbenv global 3.2.0
+      - name: Install dependencies
         run: sudo apt -y install libarchive-tools
+      - name: Install Bundler
+        run: gem install bundler
       - name: Run Tests
         run: bundle exec rake test:unit
+name: Vagrant Ruby Tests
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'bin/**'
+      - 'lib/**'
+      - 'plugins/**'
+      - 'test/**'
+      - 'Gemfile'
+      - 'templates/**'
+      - 'vagrant.gemspec'
+      - 'Rakefile'
